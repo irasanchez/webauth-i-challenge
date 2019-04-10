@@ -1,0 +1,17 @@
+{
+  "name": "webauth-i-challenge",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/irasanchez/webauth-i-challenge.git",
+  "author": "iradsanchez <ira.d.sanchez@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^3.0.5",
+    "express": "^4.16.4",
+    "node": "^11.13.0",
+    "sqlite3": "^4.0.6"
+  },
+  "scripts": {
+    "server": "nodemon index.js"
+  }
+}

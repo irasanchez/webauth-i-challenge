@@ -2,19 +2,29 @@ const knex = require("knex");
 const dbConfig = require("./../knexfile");
 const db = knex(dbConfig.development);
 
-module.exports = { findUserByID, addUser };
+module.exports = {
+  add,
+  find,
+  findBy,
+  findById
+};
 
-function findUserByID(id) {
+function find() {
+  return db("users").select("id", "username", "password");
+}
+
+function findBy(filter) {
+  return db("users").where(filter);
+}
+
+async function add(user) {
+  const [id] = await db("users").insert(user);
+
+  return findById(id);
+}
+
+function findById(id) {
   return db("users")
-    .where("id", id)
+    .where({ id })
     .first();
 }
-
-async function addUser(user) {
-  const query = await db("users").insert(user);
-
-  return findUserByID(query);
-}
-// findUsers: function() {
-//   return db("users").select("id", "username", "password");
-// },

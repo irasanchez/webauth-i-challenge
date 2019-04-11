@@ -6,7 +6,7 @@ const server = express();
 const dbHelper = require("./data/helpers");
 const port = process.env.port || 3000;
 
-server.use(helmet());
+// server.use(helmet());
 server.use(express.json());
 
 server.post("/api/register", (req, res) => {
@@ -42,13 +42,37 @@ server.post("/api/login", (req, res) => {
     });
 });
 
-// server.get("/api/users", (req, res) => {
-//   // - If the user is logged in,
-//   // - respond with an array of all the users contained in the database.
-//   // If the user is not logged in
-//   // - respond with the correct status code
-//   // - and the message: 'You shall not pass!'.
-// });
+//this is custom middleware
+function restrictedAccess(req, res, next) {
+  //grab sn and pass from headers
+  const { username, password } = req.headers;
+
+  // use code from login since it checks if password and username (req.headers) are right
+
+  dbHelper
+    .findBy({ username })
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        //instead of sending an api message, call next(), since this is middleware
+        next();
+      } else {
+        res.status(401).json({ message: "Invalid Credentials" });
+      }
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+}
+
+server.get("/api/users", restrictedAccess, (req, res) => {
+  dbHelper
+    .find()
+    .then(users => {
+      res.json(users);
+    })
+    .catch(error => res.send(error));
+});
 
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);

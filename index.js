@@ -6,7 +6,6 @@ const bcrypt = require("bcrypt");
 const dbConfig = require("./knexfile");
 
 const server = express();
-const db = knex(dbConfig.development);
 const dbHelper = require("./data/helpers");
 const port = process.env.port || 3000;
 
@@ -14,16 +13,20 @@ server.use(helmet());
 server.use(express.json());
 
 server.post("/api/register", (req, res) => {
-  //Creates a `user`
-  // from req.body
-  // **Hash the password**
-  // save to database
   let newUser = req.body;
+  console.log(newUser);
 
   const hash = bcrypt.hashSync(newUser.password, 11);
   newUser.password = hash;
+  console.log(newUser.password);
 
-  dbHelper.addUser(newUser).then(savedUser => res.status(201).json(savedUser));
+  try {
+    dbHelper
+      .addUser(newUser)
+      .then(savedUser => res.status(201).json(savedUser));
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 });
 
 // server.post("/api/login", (req, res) => {

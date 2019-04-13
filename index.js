@@ -1,13 +1,17 @@
 const express = require("express");
+const cors = require("cors");
 const helmet = require("helmet");
 const bcrypt = require("bcrypt");
+const session = require("express-session");
 
 const server = express();
 const dbHelper = require("./data/helpers");
 const port = process.env.port || 3000;
 
-// server.use(helmet());
+server.use(helmet());
 server.use(express.json());
+server.use(cors());
+server.use(session);
 
 server.post("/api/register", (req, res) => {
   let newUser = req.body;

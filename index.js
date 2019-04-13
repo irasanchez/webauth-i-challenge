@@ -1,7 +1,7 @@
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const session = require("express-session");
 
 const dbHelper = require("./data/helpers");
@@ -29,10 +29,11 @@ server.use(session(sessionConfig)); //step 2
 
 server.post("/api/register", (req, res) => {
   let newUser = req.body;
+  console.log(newUser, "log 1");
 
   const hash = bcrypt.hashSync(newUser.password, 11);
   newUser.password = hash;
-  console.log(newUser);
+  console.log(newUser, "log 2");
 
   try {
     dbHelper

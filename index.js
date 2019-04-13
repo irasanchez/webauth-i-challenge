@@ -33,15 +33,15 @@ server.post("/api/register", (req, res) => {
 
   const hash = bcrypt.hashSync(newUser.password, 11);
   newUser.password = hash;
-  console.log(newUser, "log 2");
 
-  try {
-    dbHelper
-      .addUser(newUser)
-      .then(savedUser => res.status(201).json(savedUser));
-  } catch (error) {
-    res.status(500).json({ error });
-  }
+  dbHelper
+    .add(newUser)
+    .then(savedUser => {
+      res.status(201).json(savedUser);
+    })
+    .catch(error => {
+      res.status(500).json({ error });
+    });
 });
 
 //this is custom middleware
